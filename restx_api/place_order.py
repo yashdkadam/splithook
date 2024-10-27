@@ -39,6 +39,12 @@ class PlaceOrder(Resource):
     def post(self):
         try:
             data = request.json
+
+            AUTH_TOKEN, broker, BROKER_API_KEY = data['BROKER_API_SECRET'], data['broker'], data['BROKER_API_SECRET'] 
+            print("AUTH_TOKEN", AUTH_TOKEN, "broker", broker)
+            data.pop('broker')
+            data.pop('BROKER_API_SECRET')
+            data.pop('BROKER_API_KEY')
             # Validate and deserialize input
             order_data = order_schema.load(data)
 
@@ -53,20 +59,20 @@ class PlaceOrder(Resource):
                 }), 400)
 
             api_key = order_data['apikey']
-            AUTH_TOKEN, broker = get_auth_token_broker(api_key)
+            
+            print(order_data)
             if AUTH_TOKEN is None:
                 return make_response(jsonify({
                     'status': 'error',
                     'message': 'Invalid openalgo apikey'
                 }), 403)
-
+            
             broker_module = import_broker_module(broker)
             if broker_module is None:
                 return make_response(jsonify({
                     'status': 'error',
                     'message': 'Broker-specific module not found'
                 }), 404)
-
             try:
                 # Call the broker's place_order_api function
                 res, response_data, order_id = broker_module.place_order_api(order_data, AUTH_TOKEN)

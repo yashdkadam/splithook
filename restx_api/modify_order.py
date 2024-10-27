@@ -35,8 +35,14 @@ class ModifyOrder(Resource):
     def post(self):
         try:
             data = request.json
-            order_request_data = copy.deepcopy(data)
-            order_request_data.pop('apikey', None)
+
+            AUTH_TOKEN, broker, BROKER_API_KEY = data['BROKER_API_SECRET'], data['broker'], data['BROKER_API_SECRET'] 
+            print("AUTH_TOKEN", AUTH_TOKEN, "broker", broker)
+            data.pop('broker')
+            data.pop('BROKER_API_SECRET')
+            data.pop('BROKER_API_KEY')
+
+            order_request_data = data
 
             mandatory_fields = [
                 'apikey', 'strategy', 'exchange', 'symbol', 'orderid',
@@ -53,7 +59,7 @@ class ModifyOrder(Resource):
                 }), 400)
 
             api_key = data['apikey']
-            AUTH_TOKEN, broker = get_auth_token_broker(api_key)
+            # AUTH_TOKEN, broker = get_auth_token_broker(api_key)
 
             if AUTH_TOKEN is None:
                 logger.error("Invalid openalgo apikey")

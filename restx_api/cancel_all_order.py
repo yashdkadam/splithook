@@ -40,13 +40,19 @@ class CancelAllOrders(Resource):
     def post(self):
         try:
             data = request.json
-            order_request_data = copy.deepcopy(data)
-            order_request_data.pop('apikey', None)
+
+            AUTH_TOKEN, broker, BROKER_API_KEY = data['BROKER_API_SECRET'], data['broker'], data['BROKER_API_SECRET'] 
+            print("AUTH_TOKEN", AUTH_TOKEN, "broker", broker)
+            data.pop('broker')
+            data.pop('BROKER_API_SECRET')
+            data.pop('BROKER_API_KEY')
+           
             # Validate and deserialize input
             order_data = cancel_all_orders_schema.load(data)
-
+            order_request_data = order_data 
+            
             api_key = order_data['apikey']
-            AUTH_TOKEN, broker = get_auth_token_broker(api_key)
+            # AUTH_TOKEN, broker = get_auth_token_broker(api_key)
             if AUTH_TOKEN is None:
                 logger.error("Invalid openalgo apikey")
                 return make_response(jsonify({'status': 'error', 'message': 'Invalid openalgo apikey'}), 403)
