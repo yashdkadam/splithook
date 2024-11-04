@@ -101,6 +101,32 @@ def create_app():
         print(data)
         place_order(data, customer_data)
         return jsonify({"message": "working"})
+    
+    @app.route('/login', methods=['GET'])
+    def login():
+        return render_template('sh_login.html')
+    
+    @app.route('/register', methods=['GET'])
+    def register():
+        return render_template('sh_register.html')
+    
+    # for customer
+    @app.route('/customer/stocks', methods=['GET'])
+    def stocks():
+        return render_template('sh_cust_stock.html')
+    
+    @app.route('/customer/logs', methods=['GET'])
+    def logs():
+        return render_template('sh_cust_logs.html')
+    
+    # for admin
+    @app.route('/admin/stocks', methods=['GET'])
+    def admin_stocks():
+        return render_template('sh_admin_stock.html')
+    
+    @app.route('/admin/logs', methods=['GET'])
+    def admin_logs():
+        return render_template('sh_admin_logs.html')
 
 
     @app.errorhandler(404)
