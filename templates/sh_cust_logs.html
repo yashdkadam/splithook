@@ -41,9 +41,8 @@
             tabindex="0"
             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li><a>Homepage</a></li>
-            <li><a>Portfolio</a></li>
-            <li><a>About</a></li>
+            <li><a href="/customer/stocks">Stocks</a></li>
+            <li><a href="/customer/logs">Logs</a></li>
           </ul>
         </div>
       </div>
@@ -75,7 +74,8 @@
               </a>
             </li>
             <li><a>Settings</a></li>
-            <li><a>Logout</a></li>
+            <li><button onclick="localStorage.clear();window.location.reload();" >Logout</button></li>
+
           </ul>
         </div>
       </div>
@@ -84,41 +84,106 @@
       <div class="">
         <h1 class="text-center">Logs</h1>
         <div class="overflow-x-auto">
-          <table class="table">
+          <table class="table" id="logTable">
             <!-- head -->
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Quatity</th>
+                <th>Price</th>
                 <th>Action</th>
                 <th>Status</th>
                 <th>Timestamp</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <div class="flex items-center gap-3">
-                    <div>
-                      <div class="font-bold">TATASTEEL</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="font-bold">50</div>
-                </td>
-                <td>
-                    <div class="font-bold">BUY</div>
-                </td>
-                <td>
-                    <div class="font-bold">Executed</div>
-                </td>
-                <th>
-                    <div class="font-bold">8:03pm 27/10/2024</div>
-                </th>
-              </tr>
+              <!-- Rows will be populated dynamically here -->
             </tbody>
           </table>
+
+          <script>
+            // for user validation before page load
+          document.addEventListener("DOMContentLoaded", async () => {
+            if (
+              localStorage.getItem("username") == null ||
+              localStorage.getItem("type") == null)
+            {
+              window.location.href = '/login';
+            }
+          });
+
+            // Function to convert UNIX timestamp to a readable format
+            function formatTimestamp(unixTime) {
+              const date = new Date(unixTime * 1000);
+              return date.toLocaleString("en-GB", { hour12: true });
+            }
+
+            // Fetch the username from localStorage
+            const username = localStorage.getItem("username");
+
+            // Fetch data from the API and populate the table
+            async function populateTable() {
+              if (!username) {
+                console.error("Username not found in localStorage");
+                return;
+              }
+
+              try {
+                const response = await fetch(
+                  `http://localhost:5000/customer/logs/get/${username}`
+                );
+                const data = await response.json();
+                const tableBody = document.querySelector("#logTable tbody");
+
+                data.forEach((log) => {
+                  // Create a new row
+                  const row = document.createElement("tr");
+
+                  // Name cell (using order ID as symbol placeholder)
+                  const nameCell = document.createElement("td");
+                  nameCell.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="font-bold">${log.symbol.toUpperCase()}</div>
+        </div>
+      `;
+                  row.appendChild(nameCell);
+
+                  // Quantity cell (assuming fixed quantity, e.g., 50)
+                  const quantityCell = document.createElement("td");
+                  quantityCell.innerHTML = `<div class="font-bold">${log.price}</div>`;
+                  row.appendChild(quantityCell);
+
+                  // Action cell (using a default action for demonstration)
+                  const actionCell = document.createElement("td");
+                  actionCell.innerHTML = `<div class="font-bold">${
+                    log.status === "completed" ? "SELL" : "BUY"
+                  }</div>`;
+                  row.appendChild(actionCell);
+
+                  // Status cell
+                  const statusCell = document.createElement("td");
+                  statusCell.innerHTML = `<div class="font-bold">${
+                    log.status.charAt(0).toUpperCase() + log.status.slice(1)
+                  }</div>`;
+                  row.appendChild(statusCell);
+
+                  // Timestamp cell
+                  const timestampCell = document.createElement("td");
+                  timestampCell.innerHTML = `<div class="font-bold">${formatTimestamp(
+                    log.ordertime
+                  )}</div>`;
+                  row.appendChild(timestampCell);
+
+                  // Append row to table body
+                  tableBody.appendChild(row);
+                });
+              } catch (error) {
+                console.error("Error fetching data:", error);
+              }
+            }
+
+            // Call the function to populate the table on page load
+            populateTable();
+          </script>
         </div>
       </div>
     </div>

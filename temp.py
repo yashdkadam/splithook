@@ -3,7 +3,8 @@
 # # os.environ['BROKER_API_KEY'] = "1"
 
 
-# # BROKER_API_SECRET = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzMwNTU0OTc5LCJ0b2tlbkNvbnN1bWVyVHlwZSI6IlNFTEYiLCJ3ZWJob29rVXJsIjoiaHR0cDovLzEyNy4wLjAuMTo1MDAwL2Jyb2tlci9jYWxsYmFjayIsImRoYW5DbGllbnRJZCI6IjExMDQ0NjkyOTYifQ.9RalbE-7z3H0VVSonEfl7S7PEywm1uXvMWw9XNDaSmsrvwH465SnFqMnbGhwL6mWRZQghlc9X_3wxt4sqhwf2g'
+# # BROKER_API_SECRET = 
+# 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzMwNTU0OTc5LCJ0b2tlbkNvbnN1bWVyVHlwZSI6IlNFTEYiLCJ3ZWJob29rVXJsIjoiaHR0cDovLzEyNy4wLjAuMTo1MDAwL2Jyb2tlci9jYWxsYmFjayIsImRoYW5DbGllbnRJZCI6IjExMDQ0NjkyOTYifQ.9RalbE-7z3H0VVSonEfl7S7PEywm1uXvMWw9XNDaSmsrvwH465SnFqMnbGhwL6mWRZQghlc9X_3wxt4sqhwf2g'
 # # BROKER_API_KEY = '1208340021952771'
 
 # broker = ['fivepaisa', 'aliceblue', 'angel', 'dhan', 'fyers',
@@ -98,14 +99,12 @@ try:
 
             
     '''
+    stringi = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzMyMDI1ODk1LCJ0b2tlbkNvbnN1bWVyVHlwZSI6IlNFTEYiLCJ3ZWJob29rVXJsIjoiIiwiZGhhbkNsaWVudElkIjoiMTEwNDQ2OTI5NiJ9.Ai8sEVQXWIAi6T97MutDQCygoMekOreE59OgWDZzp6pkl79JJ-Hf6cv8mwO4wUl9NxThXyvE0aQX10sB1kagGQ'
+    print(len(stringi))
     # SQL query to create a table 
     create_table_query = '''
-INSERT INTO customer_stock (username, symbol, quantity) 
-VALUES 
-    ('user1', 'MSFT', 15);
-
-
-
+        ALTER TABLE customer
+ALTER COLUMN apisecret TYPE character varying(500);
 
     '''
     cursor.execute(create_table_query)

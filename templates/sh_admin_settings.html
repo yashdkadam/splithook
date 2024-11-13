@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="navbar bg-base-100">
+      <div class="navbar-start">
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h7"
+              />
+            </svg>
+          </div>
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          >
+            <li><a href="/admin/stocks">Stocks</a></li>
+            <li><a href="/admin/logs">Logs</a></li>
+            <li><a href="/admin/settings">Settings</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="navbar-center">
+        <a class="btn btn-ghost text-2xl">SPLITHOOK</a>
+      </div>
+      <div class="navbar-end">
+        <div class="dropdown dropdown-end">
+          <div
+            tabindex="0"
+            role="button"
+            class="btn btn-ghost btn-circle avatar"
+          >
+            <div class="w-10 rounded-full">
+              <img
+                alt="Tailwind CSS Navbar component"
+                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+              />
+            </div>
+          </div>
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          >
+            <li>
+              <a class="justify-between">
+                Profile
+                <span class="badge">New</span>
+              </a>
+            </li>
+            <li><a>Settings</a></li>
+            <li>
+              <button onclick="localStorage.clear();window.location.reload();">
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-center">
+      <div class="">
+        <h1 class="text-center">Customer Settings</h1>
+        <div class="flex">
+          <label class="input input-bordered flex items-center gap-2 grow">
+            <input type="text" class="grow" placeholder="Search" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              class="h-4 w-4 opacity-70"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </label>
+          <label for="my_modal_8" class="btn"
+            ><i class="fa-solid fa-plus"></i>
+          </label>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="table w-full table-zebra">
+            <!-- head -->
+            <thead>
+              <tr class="font-bold">
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile Number</th>
+                <th>Status</th>
+                <th>Enable</th>
+                <th>Disable</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody">
+              <!-- Dynamic content will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+
+        <script>
+          // for user validation before page load
+          document.addEventListener("DOMContentLoaded", async () => {
+            if (
+              localStorage.getItem("username") == null ||
+              localStorage.getItem("type") == null ||
+              localStorage.getItem("type") != "admin"
+            ) {
+              window.location.href = "/login";
+            }
+          });
+
+          // Function to fetch user data from the API
+          async function fetchUserData() {
+            try {
+              const response = await fetch(
+                "http://localhost:5000/customer/get"
+              );
+
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+
+              const apiResponse = await response.json();
+              populateTable(apiResponse);
+            } catch (error) {
+              console.error(
+                "There was a problem with the fetch operation:",
+                error
+              );
+            }
+          }
+
+          // Function to populate the table with user data
+          function populateTable(users) {
+            const tableBody = document.getElementById("userTableBody");
+
+            users.forEach((user) => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+                    <td class="font-bold">${user.username}</td>
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <div class="font-bold">${user.name}</div>
+                        </div>
+                    </td>
+                    <td class="font-bold">${user.email}</td>
+                    <td class="font-bold">${user.mobilenumber}</td>
+                    <td class="font-bold">${user.status}</td>
+                    <td>
+                        <form id="enableForm" onsubmit="handleEnableorDisable(event, '${user.username}', 'enable')">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-check fa-lg"></i>
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                        <form id="enableForm" onsubmit="handleEnableorDisable(event, '${user.username}', 'disable')">
+                            <button type="submit" class="btn btn-error">
+                                <i class="fa-solid fa-xmark fa-lg"></i>
+                            </button>
+                        </form>
+                    </td>
+                `;
+
+              tableBody.appendChild(row);
+            });
+          }
+
+          // Call the fetch function on page load
+          fetchUserData();
+
+          function handleEnableorDisable(event, username, type) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Make a GET request
+            fetch(`http://localhost:5000/customer/${type}/${username}`, {
+              method: "GET",
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.status === "success") {
+                  window.location.reload(); // Reload the page after successful request
+                } else {
+                  alert("Error enabling customer");
+                }
+              })
+              .catch((error) => console.error("Error:", error));
+          }
+        </script>
+      </div>
+    </div>
+
+    <input type="checkbox" id="my_modal_8" class="modal-toggle" />
+    <div class="modal" role="dialog">
+      <div class="modal-box">
+        <h3 class="text-lg font-bold">Add new Customer</h3>
+        <form id="customerForm" class="space-y-4" onsubmit="submitForm(event)">
+          <label class="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              class="h-4 w-4 opacity-70"
+            >
+              <path
+                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z"
+              />
+            </svg>
+            <input
+              type="text"
+              name="name"
+              class="grow"
+              placeholder="Name"
+              required
+            />
+          </label>
+
+          <label class="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              class="h-4 w-4 opacity-70"
+            >
+              <path
+                d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z"
+              />
+              <path
+                d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z"
+              />
+            </svg>
+            <input
+              type="email"
+              name="email"
+              class="grow"
+              placeholder="Email"
+              required
+            />
+          </label>
+
+          <label class="input input-bordered flex items-center gap-2">
+            <i class="fa-solid fa-phone"></i>
+            <input
+              type="number"
+              name="mobilenumber"
+              class="grow"
+              placeholder="Mobile Number"
+              required
+            />
+          </label>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <script>
+          async function submitForm(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = document.getElementById("customerForm");
+            const formData = new FormData(form);
+
+            // Convert form data to JSON
+            const jsonData = {};
+            formData.forEach((value, key) => {
+              jsonData[key] = value;
+            });
+
+            // Send the JSON data as a POST request
+            const response = await fetch("http://localhost:5000/customer/add", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(jsonData),
+            });
+
+            // Handle the response and redirect if 'redirect_url' is provided
+            if (response.ok) {
+              const data = await response.json();
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+              } else {
+                alert(
+                  "Submission successful, but no redirect URL was provided."
+                );
+              }
+            } else {
+              alert("There was an error with your submission.");
+            }
+          }
+        </script>
+        <div class="flex justify-end">
+          <div class="modal-action m-1">
+            <label for="my_modal_8" class="btn">Save</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </body>
+</html>

@@ -30,7 +30,7 @@ try:
 
     # SQL query to select all records from the admin_stocks table
     select_query = '''
-    SELECT * FROM customer_stock;
+    select * from users; 
     '''
     
     cursor.execute(select_query)

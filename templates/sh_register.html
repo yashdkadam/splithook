@@ -8,7 +8,13 @@
       rel="stylesheet"
       type="text/css"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Document</title>
   </head>
   <body>
@@ -69,7 +75,8 @@
               </a>
             </li>
             <li><a>Settings</a></li>
-            <li><a>Logout</a></li>
+            <li><button onclick="localStorage.clear();window.location.reload();" >Logout</button></li>
+
           </ul>
         </div>
       </div>
@@ -77,54 +84,126 @@
     <div class="flex items-center justify-center">
       <div class="size-60">
         <h1 class="text-center">Welcome Aboard!</h1>
-        <label class="input input-bordered flex items-center gap-2">
+        <form id="apiForm" class="space-y-4" onsubmit="submitForm(event)">
+          <label class="input input-bordered flex items-center gap-2">
             <i class="fa-solid fa-briefcase"></i>
-            <select class="grow">
-                <option value="" disabled selected>Choose a broker</option>
-                <option value="fivepaisa">fivepaisa</option>
-                <option value="aliceblue">aliceblue</option>
-                <option value="angel">angel</option>
-                <option value="dhan">dhan</option>
-                <option value="fyers">fyers</option>
-                <option value="icici">icici</option>
-                <option value="kotak">kotak</option>
-                <option value="upstox">upstox</option>
-                <option value="zebu">zebu</option>
-                <option value="zerodha">zerodha</option>
-              </select>
-              
-        </label>
-        <label class="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            class="h-4 w-4 opacity-70"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-              clip-rule="evenodd"
+            <select name="broker" class="grow" required>
+              <option value="" disabled selected>Choose a broker</option>
+              <option value="fivepaisa">fivepaisa</option>
+              <option value="aliceblue">aliceblue</option>
+              <option value="angel">angel</option>
+              <option value="dhan">dhan</option>
+              <option value="fyers">fyers</option>
+              <option value="icici">icici</option>
+              <option value="kotak">kotak</option>
+              <option value="upstox">upstox</option>
+              <option value="zebu">zebu</option>
+              <option value="zerodha">zerodha</option>
+            </select>
+          </label>
+
+          <label class="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              class="h-4 w-4 opacity-70"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <input
+              type="password"
+              name="api_key"
+              class="grow"
+              placeholder="API KEY"
+              required
             />
-          </svg>
-          <input type="password" class="grow" placeholder="API KEY" />
-        </label>
-        <label class="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            class="h-4 w-4 opacity-70"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-              clip-rule="evenodd"
+          </label>
+
+          <label class="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              class="h-4 w-4 opacity-70"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <input
+              type="password"
+              name="api_secret"
+              class="grow"
+              placeholder="API SECRET"
+              required
             />
-          </svg>
-          <input type="password" class="grow" placeholder="API SECRET" />
-        </label>
-        <button class="btn btn-info">Submit</button>
+          </label>
+
+          <div class="flex justify-end">
+            <button class="btn btn-primary text-right">Submit</button>
+          </div>
+        </form>
+
+        <script>
+          // for check before page load
+          document.addEventListener("DOMContentLoaded", async () => {
+            if (
+              localStorage.getItem("username") == null ||
+              localStorage.getItem("type") == null
+            ) {
+              window.location.href = '/login';
+            }
+          });
+
+
+
+          // for form submit event
+          async function submitForm(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = document.getElementById("apiForm");
+            const formData = new FormData(form);
+
+            // Convert form data to JSON
+            const jsonData = {
+              username: localStorage.getItem("username"), // Get username from local storage
+            };
+
+            formData.forEach((value, key) => {
+              jsonData[key] = value;
+            });
+
+            // Send the JSON data as a POST request
+            const response = await fetch("http://localhost:5000/customer/register", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(jsonData),
+            });
+
+            // Handle the response and redirect if 'redirect_url' is provided
+            if (response.ok) {
+              const data = await response.json();
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+              } else {
+                alert(
+                  "Submission successful, but no redirect URL was provided."
+                );
+              }
+            } else {
+              alert("There was an error with your submission.");
+            }
+          }
+        </script>
       </div>
     </div>
 
